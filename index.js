@@ -10,23 +10,19 @@ function BambooGitVersionFile(options) {
 
     var defaultOptions = {
         outputFile: './version.json',
-        template: 'version.ejs',
-        templateString: '',
-        packageFile: './package.json',
-        extras: {}
+        template: './version.ejs',
+        templateString: ''
     };
 
     var optionsObject = options || {};
     optionsObject = _.defaults(optionsObject, defaultOptions);
 
     self.options = optionsObject || {};
-    self.options['package'] = require(options.packageFile);
 }
 
 BambooGitVersionFile.prototype.apply = function () {
     var self = this;
-
-
+    
     self.options.currentTime = new Date();
 
     var commitId = childProcess.execSync('git rev-parse HEAD');
