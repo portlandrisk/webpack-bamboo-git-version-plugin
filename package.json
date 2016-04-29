@@ -29,7 +29,8 @@
   "homepage": "https://github.com/portlandrisk/webpack-bamboo-git-version-plugin",
   "dependencies": {
     "ejs": "~1.0.0",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "graceful-fs": "~4.0.0"
   },
   "devDependencies": {
     "mocha": "~1.18.2"
