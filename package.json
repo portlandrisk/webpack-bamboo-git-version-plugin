@@ -1,6 +1,6 @@
 {
   "name": "webpack-bamboo-git-version-plugin",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "Generates a file with version number composed of bamboo build no and git commit id",
   "main": "index.js",
   "scripts": {
