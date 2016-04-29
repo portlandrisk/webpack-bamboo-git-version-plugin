@@ -19,7 +19,7 @@ function BambooGitVersionFile(options) {
 
     self.options = optionsObject || {};
     self.options['package'] = require(options.packageFile);
-};
+}
 
 BambooGitVersionFile.prototype.apply = function(){
     var self = this;
@@ -27,8 +27,13 @@ BambooGitVersionFile.prototype.apply = function(){
 
     self.options.currentTime = new Date();
 
-    self.options.buildVersion = childProcess.execSync('git rev-parse HEAD').toString();
-    
+    var commitId = childProcess.execSync('git rev-parse HEAD');
+    if (commitId) {
+        self.options.commitId = commitId.toString().trim();
+    }
+
+    self.options.bambooBuildNumber = process.env.bamboo_buildNumber;
+
     /*
      * If we are given a template string in the config, then use it directly.
      * But if we get a file path, fetch the content then use it.
@@ -40,7 +45,6 @@ BambooGitVersionFile.prototype.apply = function(){
 
             if(error){
                 throw error;
-                return;
             }
 
             self.writeFile(content);
@@ -54,7 +58,7 @@ BambooGitVersionFile.prototype.apply = function(){
  */
 BambooGitVersionFile.prototype.writeFile = function(templateContent){
     var self = this;
-    fileContent = ejs.render(templateContent, self.options);
+    var fileContent = ejs.render(templateContent, self.options);
     fs.writeFile(self.options.outputFile, fileContent, {flag: 'w'});
 };
 
