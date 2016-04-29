@@ -1,4 +1,6 @@
-var fs = require('fs'),
+var mkdirp = require('mkdirp'),
+    getDirName = require('path').dirname,
+    fs = require('fs'),
     _ = require('underscore'),
     ejs = require('ejs'),
     childProcess = require('child_process');
@@ -21,7 +23,7 @@ function BambooGitVersionFile(options) {
     self.options['package'] = require(options.packageFile);
 }
 
-BambooGitVersionFile.prototype.apply = function(){
+BambooGitVersionFile.prototype.apply = function () {
     var self = this;
 
 
@@ -38,12 +40,12 @@ BambooGitVersionFile.prototype.apply = function(){
      * If we are given a template string in the config, then use it directly.
      * But if we get a file path, fetch the content then use it.
      */
-    if (self.options.templateString){
+    if (self.options.templateString) {
         self.writeFile(self.options.templateString);
     } else {
-        fs.readFile(self.options.template, {encoding: 'utf8'}, function(error, content){
+        fs.readFile(self.options.template, {encoding: 'utf8'}, function (error, content) {
 
-            if(error){
+            if (error) {
                 throw error;
             }
 
@@ -56,10 +58,12 @@ BambooGitVersionFile.prototype.apply = function(){
  * Renders the template and writes the version file to the file system.
  * @param templateContent
  */
-BambooGitVersionFile.prototype.writeFile = function(templateContent){
+BambooGitVersionFile.prototype.writeFile = function (templateContent) {
     var self = this;
     var fileContent = ejs.render(templateContent, self.options);
-    fs.writeFile(self.options.outputFile, fileContent, {flag: 'w'});
+    mkdirp(getDirName(self.options.outputFile), function(err) {
+        fs.writeFile(self.options.outputFile, fileContent, {flag: 'w'});    
+    });
 };
 
 module.exports = BambooGitVersionFile;
